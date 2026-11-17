@@ -1,8 +1,3 @@
-/**
- * app.js
- * Entry Point Express.js Backend Server — Langkah Naira
- */
-
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
@@ -19,11 +14,8 @@ const { errorResponse, successResponse } = require('./utils/response');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// ==========================================
-// 1. GLOBAL MIDDLEWARES
-// ==========================================
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // agar foto bisa diload dari origin frontend
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // allow frontend origin to load uploaded images
 }));
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN || '*',
@@ -32,16 +24,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Sajikan folder uploads secara publik
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// ==========================================
-// 2. HEALTH CHECK & ROOT ROUTE
-// ==========================================
 app.get('/', (req, res) => {
   return successResponse(res, 'Selamat datang di API Langkah Naira — Pusat Layanan & Terapi Anak Berkebutuhan Khusus LK Naira Kencana.', {
     version: '1.0.0',
@@ -62,35 +50,18 @@ app.get('/api/health', async (req, res, next) => {
   }
 });
 
-// ==========================================
-// 3. API MODULE ROUTES
-// ==========================================
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 
-// ==========================================
-// 4. 404 NOT FOUND HANDLER
-// ==========================================
 app.use((req, res) => {
   return errorResponse(res, `Endpoint ${req.method} ${req.originalUrl} tidak ditemukan di server.`, 'ROUTE_NOT_FOUND', 404);
 });
 
-// ==========================================
-// 5. GLOBAL ERROR HANDLER
-// ==========================================
 app.use(errorHandler);
 
-// ==========================================
-// 6. SERVER STARTUP
-// ==========================================
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`===============================================`);
-    console.log(`🚀 Server Langkah Naira aktif di port : ${PORT}`);
-    console.log(`🌐 Base URL: http://localhost:${PORT}`);
-    console.log(`📡 Database: Neon PostgreSQL`);
-    console.log(`🖼️  Uploads : http://localhost:${PORT}/uploads`);
-    console.log(`===============================================`);
+    console.log(`Server Langkah Naira running at http://localhost:${PORT}`);
   });
 }
 

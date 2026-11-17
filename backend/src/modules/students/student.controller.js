@@ -1,7 +1,3 @@
-/**
- * modules/students/student.controller.js
- * Controller untuk mengelola pendaftaran dan verifikasi siswa LK Naira Kencana
- */
 
 const fs = require('fs');
 const path = require('path');
@@ -10,10 +6,6 @@ const { isS3Configured, uploadToS3 } = require('../../config/storage');
 const { generateStudentId } = require('../../utils/generateId');
 const { successResponse, errorResponse, paginatedResponse } = require('../../utils/response');
 
-/**
- * POST /api/students/register
- * Mendaftarkan profil siswa baru (hanya role 'parent')
- */
 const registerStudent = async (req, res, next) => {
   try {
     const parentId = req.user.id;
@@ -88,10 +80,6 @@ const registerStudent = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/students/my-students
- * Mendapatkan daftar siswa yang didaftarkan oleh akun orang tua yang sedang login
- */
 const getMyStudents = async (req, res, next) => {
   try {
     const parentId = req.user.id;
@@ -109,10 +97,6 @@ const getMyStudents = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/students
- * Mendapatkan semua data siswa dengan filter status, pencarian nama, dan pagination (Admin / Therapist)
- */
 const getAllStudents = async (req, res, next) => {
   try {
     const { status, search, page = 1, limit = 10 } = req.query;
@@ -163,10 +147,6 @@ const getAllStudents = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/students/:id
- * Mengambil detail lengkap profil formulir satu siswa
- */
 const getStudentById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -188,7 +168,6 @@ const getStudentById = async (req, res, next) => {
 
     const student = result.rows[0];
 
-    // Jika yang request adalah role parent, pastikan dia hanya bisa mengakses data anaknya sendiri
     if (req.user.role === 'parent' && student.parent_id !== req.user.id) {
       return errorResponse(res, 'Akses terlarang. Anda tidak memiliki izin untuk melihat formulir ini.', 'FORBIDDEN', 403);
     }
@@ -199,10 +178,6 @@ const getStudentById = async (req, res, next) => {
   }
 };
 
-/**
- * PUT /api/students/:id
- * Update informasi data formulir pendaftaran siswa
- */
 const updateStudent = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -272,10 +247,6 @@ const updateStudent = async (req, res, next) => {
   }
 };
 
-/**
- * POST /api/students/:id/photo
- * Upload pas foto siswa (3x4) ke S3 Object Storage (atau local disk jika S3 tidak aktif)
- */
 const uploadStudentPhoto = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -331,10 +302,6 @@ const uploadStudentPhoto = async (req, res, next) => {
   }
 };
 
-/**
- * PATCH /api/students/:id/verify
- * Verifikasi Formulir Pendaftaran Siswa (hanya Admin): approve atau reject
- */
 const verifyStudent = async (req, res, next) => {
   try {
     const { id } = req.params;

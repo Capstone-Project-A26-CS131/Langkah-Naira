@@ -1,17 +1,10 @@
-/**
- * modules/students/student.schema.js
- * Skema validasi Joi untuk formulir pendaftaran siswa LK Naira Kencana
- */
-
 const Joi = require('joi');
 
 const registerStudentSchema = Joi.object({
-  // FOTO 3x4
   photo_url: Joi.string().uri().allow(null, '').messages({
     'string.uri': 'Format photo_url harus berupa URL valid.',
   }),
 
-  // DATA ANAK
   full_name: Joi.string().trim().max(150).required().messages({
     'string.empty': 'Nama lengkap anak tidak boleh kosong.',
     'any.required': 'Nama lengkap anak wajib diisi.',
@@ -63,7 +56,6 @@ const registerStudentSchema = Joi.object({
   health_notes: Joi.array().items(Joi.string().trim()).default([]),
   health_notes_other: Joi.string().trim().max(200).allow(null, ''),
 
-  // RIWAYAT MEDIS
   is_allergic: Joi.boolean().default(false),
   allergy_detail: Joi.string().trim().allow(null, ''),
 
@@ -79,7 +71,6 @@ const registerStudentSchema = Joi.object({
   height_cm: Joi.number().positive().precision(1).allow(null),
   weight_kg: Joi.number().positive().precision(2).allow(null),
 
-  // KONTAK DARURAT
   emergency_contact_1_phone: Joi.string().trim().max(20).allow(null, ''),
   emergency_contact_1_relation: Joi.string().trim().max(50).allow(null, ''),
   emergency_contact_2_phone: Joi.string().trim().max(20).allow(null, ''),
@@ -87,20 +78,18 @@ const registerStudentSchema = Joi.object({
   emergency_contact_3_phone: Joi.string().trim().max(20).allow(null, ''),
   emergency_contact_3_relation: Joi.string().trim().max(50).allow(null, ''),
 
-  // SIKAP & EMOSI
   personality_traits: Joi.array().items(Joi.string().trim()).default([]),
   personality_other: Joi.string().trim().max(200).allow(null, ''),
 
   emotional_expressions: Joi.array().items(Joi.string().trim()).default([]),
   emotional_other: Joi.string().trim().max(200).allow(null, ''),
 
-  // KEBIASAAN
   social_frequency: Joi.string().valid('Sering', 'Jarang', 'Tidak pernah').allow(null, ''),
   tv_hours_per_day: Joi.string().valid('0 jam', '<1 jam', '1-2 jam', '2-3 jam', '>3 jam').allow(null, ''),
   gadget_hours_per_day: Joi.string().valid('0 jam', '<1 jam', '1-2 jam', '2-3 jam', '>3 jam').allow(null, ''),
   other_habits: Joi.string().trim().allow(null, ''),
 
-  // KEMANDIRIAN (A=dibantu, B=sendiri)
+  // Kemandirian: A = dibantu, B = sendiri.
   independence_eating: Joi.string().valid('A', 'B').allow(null, ''),
   independence_toilet: Joi.string().valid('A', 'B').allow(null, ''),
   independence_wakeup: Joi.string().valid('A', 'B').allow(null, ''),
@@ -108,7 +97,6 @@ const registerStudentSchema = Joi.object({
   independence_school_prep: Joi.string().valid('A', 'B').allow(null, ''),
   independence_belongings: Joi.string().valid('A', 'B').allow(null, ''),
 
-  // KEGIATAN BERSAMA ORANG TUA
   family_activities: Joi.array().items(Joi.string().trim()).default([]),
   family_activities_other: Joi.string().trim().max(200).allow(null, ''),
 

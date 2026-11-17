@@ -1,30 +1,19 @@
-/**
- * middleware/auth.js
- * Verifikasi JWT Token dan Role-based Access Control (RBAC)
- */
-
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 const { errorResponse } = require('../utils/response');
 
-/**
- * Helper untuk query dengan auto-retry 1x jika koneksi sempat terputus (Neon wake-up)
- */
+// Retry once on connection reset when serverless compute resumes
 const queryWithRetry = async (queryText, params) => {
   try {
     return await pool.query(queryText, params);
   } catch (err) {
     if (err.code === 'ECONNRESET' || err.message?.includes('ECONNRESET') || err.message?.includes('Connection terminated')) {
-      console.warn('⚠️  Koneksi Neon sempat terputus, mencoba ulang query...');
       return await pool.query(queryText, params);
     }
     throw err;
   }
 };
 
-/**
- * Middleware untuk memverifikasi JWT Bearer Token
- */
 const verifyToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -35,7 +24,6 @@ const verifyToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Ambil data user dari DB dengan auto-retry
     const userQuery = 'SELECT id, name, email, role, phone, is_active FROM users WHERE id = $1';
     const result = await queryWithRetry(userQuery, [decoded.id]);
 
@@ -48,7 +36,6 @@ const verifyToken = async (req, res, next) => {
       return errorResponse(res, 'Akun Anda dinonaktifkan. Silakan hubungi admin.', 'ACCOUNT_INACTIVE', 403);
     }
 
-    // Inject data user ke req.user
     req.user = user;
     next();
   } catch (err) {
@@ -56,10 +43,6 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-/**
- * Middleware Role Guard: membatasi akses berdasarkan role pengguna
- * @param  {...string} allowedRoles - Role yang diizinkan, misal: 'admin', 'parent', 'therapist'
- */
 const authorize = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {

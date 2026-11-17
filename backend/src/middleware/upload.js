@@ -1,15 +1,8 @@
-/**
- * middleware/upload.js
- * Middleware upload foto siswa menggunakan Multer (Memory Storage)
- * File disimpan dalam RAM (buffer) sehingga bisa langsung di-stream ke Object Storage S3 atau disimpan ke lokal disk.
- */
-
 const multer = require('multer');
 
-// Gunakan memory storage agar file buffer siap dikirim ke S3 / disk
+// Memory storage keeps buffer in RAM for direct S3 upload or local write
 const storage = multer.memoryStorage();
 
-// Filter tipe file (hanya gambar)
 const fileFilter = (req, file, cb) => {
   const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
   if (allowedMimes.includes(file.mimetype)) {
@@ -22,7 +15,7 @@ const fileFilter = (req, file, cb) => {
 const uploadPhoto = multer({
   storage,
   limits: {
-    fileSize: 2 * 1024 * 1024, // Maksimal 2MB
+    fileSize: 2 * 1024 * 1024,
   },
   fileFilter,
 });

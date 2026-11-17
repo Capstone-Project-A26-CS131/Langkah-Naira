@@ -1,8 +1,3 @@
-/**
- * modules/auth/auth.schema.js
- * Skema validasi Joi untuk request body Auth
- */
-
 const Joi = require('joi');
 
 const registerSchema = Joi.object({

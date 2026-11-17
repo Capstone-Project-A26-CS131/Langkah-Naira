@@ -1,8 +1,4 @@
-/**
- * scripts/reset_db.js
- * Script untuk reset total database Neon DB dan seed data awal secara otomatis
- * Jalankan via: npm run db:reset
- */
+// Resets database schema and seeds initial accounts.
 
 require('dotenv').config();
 const fs = require('fs');
@@ -23,7 +19,6 @@ const runReset = async () => {
   try {
     await client.query('BEGIN');
 
-    // 1. Drop semua tabel yang ada
     console.log('🗑️  Menghapus tabel lama jika ada...');
     await client.query(`
       DROP TABLE IF EXISTS students CASCADE;
@@ -31,14 +26,12 @@ const runReset = async () => {
     `);
     console.log('✅ Tabel lama berhasil dibersihkan.');
 
-    // 2. Jalankan migration 001_init.sql
     console.log('🏗️  Menjalankan migrasi DDL (001_init.sql)...');
     const migrationPath = path.join(__dirname, '../migrations/001_init.sql');
     const migrationSql = fs.readFileSync(migrationPath, 'utf-8');
     await client.query(migrationSql);
     console.log('✅ Tabel users dan students berhasil dibuat ulang.');
 
-    // 3. Jalankan seed_admin.sql
     console.log('🌱 Memasukkan seed akun awal (seed_admin.sql)...');
     const seedPath = path.join(__dirname, '../seeds/seed_admin.sql');
     const seedSql = fs.readFileSync(seedPath, 'utf-8');
