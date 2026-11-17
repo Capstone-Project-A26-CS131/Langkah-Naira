@@ -48,4 +48,9 @@ Thumbs.db
 *.onnx
 data-science/data/raw/*
 !data-science/data/raw/.gitkeep
+skills
+.neon
 
+# Uploaded files
+backend/uploads/
+uploads/

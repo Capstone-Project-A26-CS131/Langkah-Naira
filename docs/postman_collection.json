@@ -1,0 +1,815 @@
+{
+  "info": {
+    "_postman_id": "c1f7b539-78f9-4d2a-a5c9-langkahnaira02",
+    "name": "Langkah Naira — Backend API Collection (Full Test Suite)",
+    "description": "Koleksi Postman REST API Langkah Naira dengan variasi pengujian komprehensif:\n- Happy Path (Auth, Submit Form, Upload Foto S3, Search & Filter, Verifikasi Formulir oleh Admin)\n- Negative & Edge Cases (Validasi Joi, Email Duplikat, Unauthorized, RBAC Forbidden, Reject tanpa catatan).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5001",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "parent_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "other_parent_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "student_id",
+      "value": "STU-2026-001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. System & Health",
+      "item": [
+        {
+          "name": "Root Welcome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health Check (DB & Server Status)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Authentication (Positive & Negative)",
+      "item": [
+        {
+          "name": "[+] Login Admin (Auto-Save Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('admin_token', json.data.token);",
+                  "        console.log('admin_token saved!');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@lknaira.id\",\n  \"password\": \"Admin@1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "[+] Register Orang Tua 1 (Parent A)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('parent_token', json.data.token);",
+                  "        console.log('parent_token saved!');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"email\": \"wali.budi@example.com\",\n  \"password\": \"Password123\",\n  \"phone\": \"081234567890\",\n  \"role\": \"parent\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "[+] Register Orang Tua 2 (Parent B - Testing RBAC)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('other_parent_token', json.data.token);",
+                  "        console.log('other_parent_token saved!');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Siti Rahma\",\n  \"email\": \"wali.siti@example.com\",\n  \"password\": \"Password123\",\n  \"phone\": \"081987654321\",\n  \"role\": \"parent\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "[+] Login Parent Valid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"wali.budi@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "[+] Get Profile Saya (/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "[-] Register Gagal: Email Duplikat (Expect 409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Duplikat Budi\",\n  \"email\": \"wali.budi@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "[-] Login Gagal: Password Salah (Expect 401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@lknaira.id\",\n  \"password\": \"PasswordSalahTotal!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "[-] Login Gagal: Format Email Tidak Valid (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bukan-email-valid\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "[-] Akses Gagal: Tanpa Token / Token Bodong (Expect 401)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token_palsu_random_123"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Pengisian Formulir Siswa",
+      "item": [
+        {
+          "name": "[+] Submit Formulir Lengkap (50+ Field)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.id) {",
+                  "        pm.collectionVariables.set('student_id', json.data.id);",
+                  "        console.log('student_id updated to:', json.data.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Naufal Rizky Ramadhan\",\n  \"nickname\": \"Naufal\",\n  \"gender\": \"L\",\n  \"religion\": \"Islam\",\n  \"birth_place\": \"Bekasi\",\n  \"birth_date\": \"2019-05-12\",\n  \"living_with\": \"Kedua orang tua\",\n  \"hobbies\": [\"Olahraga\", \"Menggambar\"],\n  \"sibling_older\": 1,\n  \"sibling_younger\": 0,\n  \"blood_type\": \"A\",\n  \"health_aids\": [\"Tidak ada\"],\n  \"health_notes\": [\"ADD/ADHD\"],\n  \"is_allergic\": true,\n  \"allergy_detail\": \"Debu dan suhu dingin\",\n  \"ever_hospitalized\": false,\n  \"is_special_needs\": true,\n  \"special_needs_diagnosis\": \"Speech Delay / Terlambat Bicara\",\n  \"birth_history\": \"Normal\",\n  \"height_cm\": 112.5,\n  \"weight_kg\": 18.3,\n  \"emergency_contact_1_phone\": \"08199999001\",\n  \"emergency_contact_1_relation\": \"Bibi\",\n  \"emergency_contact_2_phone\": \"08199999002\",\n  \"emergency_contact_2_relation\": \"Paman\",\n  \"personality_traits\": [\"Aktif\", \"Pemalu\", \"Cepat akrab\"],\n  \"emotional_expressions\": [\"Menangis\", \"Diam\"],\n  \"social_frequency\": \"Jarang\",\n  \"tv_hours_per_day\": \"1-2 jam\",\n  \"gadget_hours_per_day\": \"1-2 jam\",\n  \"other_habits\": \"Suka menyusun mainan balok secara teratur\",\n  \"independence_eating\": \"B\",\n  \"independence_toilet\": \"A\",\n  \"independence_wakeup\": \"B\",\n  \"independence_dressing\": \"A\",\n  \"independence_school_prep\": \"A\",\n  \"independence_belongings\": \"A\",\n  \"family_activities\": [\"Makan bersama\", \"Bermain\"],\n  \"preferred_schedule\": \"Pagi\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "register"]
+            }
+          }
+        },
+        {
+          "name": "[+] Submit Formulir Minimal (Hanya Field Wajib)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Aisyah Putri Permata\",\n  \"gender\": \"P\",\n  \"birth_date\": \"2020-03-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "register"]
+            }
+          }
+        },
+        {
+          "name": "[-] Submit Gagal: Nama Lengkap Kosong (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gender\": \"L\",\n  \"birth_date\": \"2019-05-12\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "register"]
+            }
+          }
+        },
+        {
+          "name": "[-] Submit Gagal: Format Tanggal Lahir Salah (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Ananda Test\",\n  \"gender\": \"L\",\n  \"birth_date\": \"12-05-2019\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "register"]
+            }
+          }
+        },
+        {
+          "name": "[-] Submit Gagal: Jenis Kelamin Bukan L/P (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Ananda Test\",\n  \"gender\": \"X\",\n  \"birth_date\": \"2019-05-12\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Upload Pas Foto 3x4 (Object Storage)",
+      "item": [
+        {
+          "name": "[+] Upload Pas Foto Siswa (S3/Neon Storage)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "description": "Pilih file pas foto ukuran 3x4 (JPG, PNG, max 2MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}/photo",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}", "photo"]
+            }
+          }
+        },
+        {
+          "name": "[-] Upload Gagal: Request Tanpa File (Expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}/photo",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}", "photo"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Monitoring & Data Formulir Siswa",
+      "item": [
+        {
+          "name": "[+] Lihat Daftar Anak Saya (My Students - Parent)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students/my-students",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "my-students"]
+            }
+          }
+        },
+        {
+          "name": "[+] Detail Formulir Siswa (Parent Pemilik / Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}"]
+            }
+          }
+        },
+        {
+          "name": "[+] Update Data Formulir Formulir (Parent Pemilik)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nickname\": \"Naufal Fal\",\n  \"height_cm\": 113.5,\n  \"weight_kg\": 18.8,\n  \"preferred_schedule\": \"Siang\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}"]
+            }
+          }
+        },
+        {
+          "name": "[-] RBAC: Parent B Akses Formulir Anak Milik Parent A (Expect 403)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{other_parent_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}"]
+            }
+          }
+        },
+        {
+          "name": "[-] RBAC: Parent B Edit Formulir Anak Milik Parent A (Expect 403)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{other_parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Hacking Nama Siswa Lain\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin Panel — Search, Filter & Pagination",
+      "item": [
+        {
+          "name": "[+] Semua Formulir Siswa (Default Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[+] Filter: Status pending_verification",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students?status=pending_verification",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending_verification"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[+] Filter: Status approved",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students?status=approved",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "approved"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[+] Pencarian Nama Siswa (search=Naufal)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/students?search=Naufal",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Naufal"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Verifikasi Formulir Pendaftaran (Admin)",
+      "item": [
+        {
+          "name": "[+] Admin Verifikasi Formulir: APPROVE",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}", "verify"]
+            }
+          }
+        },
+        {
+          "name": "[+] Admin Verifikasi Formulir Formulir: REJECT (Dengan Catatan)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rejected\",\n  \"rejection_note\": \"Data formulir pendaftaran belum lengkap, mohon lengkapi catatan alergi dan nomor kontak darurat ananda.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}", "verify"]
+            }
+          }
+        },
+        {
+          "name": "[-] Reject Gagal: Tanpa Catatan Alasan (Expect 400)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rejected\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}", "verify"]
+            }
+          }
+        },
+        {
+          "name": "[-] RBAC: Parent Mencoba Verifikasi Formulir (Expect 403)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{parent_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students/{{student_id}}/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "students", "{{student_id}}", "verify"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
