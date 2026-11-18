@@ -23,11 +23,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Build Outputs
+# Build Outputs & Deployment
 dist/
 build/
 .next/
 out/
+.vercel/
 
 # IDE & Editor
 .vscode/
