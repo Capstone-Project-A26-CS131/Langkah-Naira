@@ -1,0 +1,23 @@
+name: Keep Neon DB Alive
+
+on:
+  schedule:
+    # Berjalan setiap 5 menit (UTC)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Memungkinkan tombol manual "Run workflow" di GitHub Actions
+
+jobs:
+  ping-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping API Health Endpoint
+        run: |
+          echo "Sending keep-alive ping to Langkah Naira Backend..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" https://langkah-naira-backend.vercel.app/api/health)
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Warning: API returned status $STATUS"
+            exit 1
+          fi
+          echo "Keep-alive ping successful (Status 200 OK)."
