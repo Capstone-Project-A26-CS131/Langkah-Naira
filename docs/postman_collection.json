@@ -1,14 +1,14 @@
 {
   "info": {
     "_postman_id": "c1f7b539-78f9-4d2a-a5c9-langkahnaira02",
-    "name": "Langkah Naira — Backend API Collection (Full Test Suite)",
+    "name": "Langkah Naira \u2014 Backend API Collection (Full Test Suite)",
     "description": "Koleksi Postman REST API Langkah Naira dengan variasi pengujian komprehensif:\n- Happy Path (Auth, Submit Form, Upload Foto S3, Search & Filter, Verifikasi Formulir oleh Admin)\n- Negative & Edge Cases (Validasi Joi, Email Duplikat, Unauthorized, RBAC Forbidden, Reject tanpa catatan).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:5001",
+      "value": "https://langkah-naira-backend.vercel.app",
       "type": "string"
     },
     {
@@ -43,8 +43,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/",
-              "host": ["{{base_url}}"],
-              "path": [""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
             }
           }
         },
@@ -55,8 +59,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/health",
-              "host": ["{{base_url}}"],
-              "path": ["api", "health"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
             }
           }
         }
@@ -98,8 +107,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -136,8 +151,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -174,8 +195,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -195,8 +222,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -212,8 +245,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/auth/me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
             }
           }
         },
@@ -233,8 +272,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -254,8 +299,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -275,8 +326,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -292,8 +349,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/auth/me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
             }
           }
         }
@@ -339,8 +402,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "register"
+              ]
             }
           }
         },
@@ -364,8 +433,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "register"
+              ]
             }
           }
         },
@@ -389,8 +464,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "register"
+              ]
             }
           }
         },
@@ -414,8 +495,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "register"
+              ]
             }
           }
         },
@@ -439,8 +526,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "register"
+              ]
             }
           }
         }
@@ -471,8 +564,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}/photo",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}", "photo"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "photo"
+              ]
             }
           }
         },
@@ -492,8 +592,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}/photo",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}", "photo"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "photo"
+              ]
             }
           }
         }
@@ -514,8 +621,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students/my-students",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "my-students"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "my-students"
+              ]
             }
           }
         },
@@ -531,8 +644,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}"
+              ]
             }
           }
         },
@@ -556,8 +675,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}"
+              ]
             }
           }
         },
@@ -573,8 +698,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}"
+              ]
             }
           }
         },
@@ -598,15 +729,21 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}"
+              ]
             }
           }
         }
       ]
     },
     {
-      "name": "5. Admin Panel — Search, Filter & Pagination",
+      "name": "5. Admin Panel \u2014 Search, Filter & Pagination",
       "item": [
         {
           "name": "[+] Semua Formulir Siswa (Default Pagination)",
@@ -620,8 +757,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -647,8 +789,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students?status=pending_verification",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -670,8 +817,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students?status=approved",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -693,8 +845,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/students?search=Naufal",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ],
               "query": [
                 {
                   "key": "search",
@@ -729,8 +886,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}/verify",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}", "verify"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "verify"
+              ]
             }
           }
         },
@@ -754,8 +918,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}/verify",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}", "verify"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "verify"
+              ]
             }
           }
         },
@@ -779,8 +950,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}/verify",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}", "verify"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "verify"
+              ]
             }
           }
         },
@@ -804,8 +982,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/students/{{student_id}}/verify",
-              "host": ["{{base_url}}"],
-              "path": ["api", "students", "{{student_id}}", "verify"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "verify"
+              ]
             }
           }
         }
