@@ -1,7 +1,7 @@
 export default function Field({ label, children, required = false }) {
   return (
-    <label className="field">
-      <span>{label}{required && <b> *</b>}</span>
+    <label className="grid gap-2 text-xs font-bold text-slate-600">
+      <span>{label}{required && <b className="text-rose-400"> *</b>}</span>
       {children}
     </label>
   );

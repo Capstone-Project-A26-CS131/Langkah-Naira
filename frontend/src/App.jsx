@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Header from "./components/common/Header";
-import SiteFooter from "./components/common/SiteFooter";
+import Header from "./components/layout/Header";
+import SiteFooter from "./components/layout/SiteFooter";
 import { initialForm } from "./data/appData";
 import DashboardPage from "./features/admin-dashboard/pages/DashboardPage";
-import HomePage from "./features/home/pages/HomePage";
+import HomePage from "./features/home/HomePage";
 import RegistrationPage from "./features/registration/pages/RegistrationPage";
 import SchedulePage from "./features/booking/pages/SchedulePage";
 
