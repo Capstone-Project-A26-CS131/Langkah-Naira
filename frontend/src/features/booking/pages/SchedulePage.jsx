@@ -1,6 +1,7 @@
 import React from "react";
-import { Building2, CalendarDays, Check, ChevronDown, Clock3, LockKeyhole, UserRound, X } from "lucide-react";
+import { Building2, CalendarDays, Check, Clock3, LockKeyhole, UserRound, X } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function SchedulePage({ form, onNavigate }) {
   const [selected, setSelected] = useState({ day: "Sen", date: "16", time: "09.00–10.00 WIB" });
@@ -48,9 +49,29 @@ export default function SchedulePage({ form, onNavigate }) {
               <option>Rizky Hadi, S.Tr.Ter</option>
             </select>
             <small className="filter-caption">Layanan: Terapi Wicara</small>
-            <div className="month-picker"><button aria-label="Bulan sebelumnya">‹</button><strong>November 2026</strong><button aria-label="Bulan berikutnya">›</button></div>
+            <div className="month-picker">
+              <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-[#524480]" aria-label="Bulan sebelumnya">‹</Button>
+              <strong>November 2026</strong>
+              <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full text-[#524480]" aria-label="Bulan berikutnya">›</Button>
+            </div>
             <small className="filter-caption">Minggu 16–20 November</small>
-            <div className="mini-days">{dates.map((date) => <button key={date.date} className={date.date === selected.date ? "active" : ""} onClick={() => setSelected({ ...date, time: selected.time })}><b>{date.day}</b><strong>{date.date}</strong></button>)}</div>
+            <div className="mini-days">
+              {dates.map((date) => (
+                <Button
+                  key={date.date}
+                  variant={date.date === selected.date ? "default" : "outline"}
+                  className={`h-auto flex flex-col py-2 px-2.5 rounded-xl border transition-all ${
+                    date.date === selected.date
+                      ? "bg-[#524480] text-white border-[#524480] hover:bg-[#43376B]"
+                      : "bg-white text-[#524480] border-[#ECE7F6] hover:bg-[#FAF8FE]"
+                  }`}
+                  onClick={() => setSelected({ ...date, time: selected.time })}
+                >
+                  <b className="text-[11px] font-normal">{date.day}</b>
+                  <strong className="text-sm font-bold">{date.date}</strong>
+                </Button>
+              ))}
+            </div>
             <p className="filter-note"><Clock3 size={13} /> Sabtu–Minggu tidak tersedia. Pilih tanggal lain untuk melihat slot terapi.</p>
           </aside>
           <section className="availability-card">
@@ -58,14 +79,39 @@ export default function SchedulePage({ form, onNavigate }) {
             <div className="slot-grid">{dates.map((date, dateIndex) => slots[dateIndex].map((time, slotIndex) => {
               const isSelected = selected.date === date.date && selected.time.startsWith(time);
               const available = !(dateIndex === 0 && slotIndex === 2) && !(dateIndex === 1 && slotIndex === 1) && !(dateIndex === 2 && slotIndex !== 1) && !(dateIndex === 4 && slotIndex === 1);
-              return <button key={`${date.date}-${time}`} className={`slot ${isSelected ? "selected" : ""} ${available ? "" : "unavailable"}`} disabled={!available} onClick={() => selectSlot(date, time, available)}><strong>{date.day} {date.date}</strong><b>{time}</b><small>{available ? (isSelected ? "✓ Dipilih" : "Tersedia") : <><LockKeyhole size={10} /> Terisi</>}</small></button>;
+              return (
+                <Button
+                  key={`${date.date}-${time}`}
+                  variant={isSelected ? "default" : available ? "outline" : "ghost"}
+                  className={`slot h-auto flex flex-col p-3 rounded-xl border text-left items-start transition-all ${
+                    isSelected
+                      ? "bg-[#524480] text-white border-[#524480] shadow-sm hover:bg-[#43376B]"
+                      : available
+                      ? "bg-white text-slate-700 border-[#ECE7F6] hover:border-[#524480] hover:bg-[#FAF8FE]"
+                      : "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60"
+                  }`}
+                  disabled={!available}
+                  onClick={() => selectSlot(date, time, available)}
+                >
+                  <strong className="text-xs">{date.day} {date.date}</strong>
+                  <b className="text-sm">{time}</b>
+                  <small className="text-[10px] mt-1 flex items-center gap-1">
+                    {available ? (isSelected ? "✓ Dipilih" : "Tersedia") : <><LockKeyhole size={10} /> Terisi</>}
+                  </small>
+                </Button>
+              );
             }))}</div>
             <div className="slot-warning"><LockKeyhole size={13} /> Terkunci setelah dipesan. Teruskan editing dijadwalkan. Slot abu-abu tidak dapat dipilih.</div>
           </section>
           <aside className="booking-summary">
             <span className="summary-overline">RINGKASAN JADWAL</span>
             <dl><dt>Anak</dt><dd>{form.full_name || "Nara Putri"} · Speech Delay</dd><dt>Terapis</dt><dd>{therapist}</dd><dt>Tanggal</dt><dd>{selected.day}, {selected.date} November 2026</dd><dt>Waktu</dt><dd>{selected.time}</dd><dt>Ruang</dt><dd>Ruang Terapi 02</dd></dl>
-            <button className="primary-button" onClick={() => setConfirmed(true)}>Konfirmasi Jadwal</button>
+            <Button
+              className="primary-button w-full bg-[#524480] hover:bg-[#43376B] text-white font-bold py-3 rounded-full shadow-md"
+              onClick={() => setConfirmed(true)}
+            >
+              Konfirmasi Jadwal
+            </Button>
             <p className="summary-note">Periksa kembali sebelum melanjutkan. Jadwal pilihan Anda 09.00–10.00 WIB.</p>
           </aside>
         </div>
@@ -73,7 +119,15 @@ export default function SchedulePage({ form, onNavigate }) {
       </div>
       {confirmed && <div className="booking-modal-backdrop" role="presentation">
         <section className="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-confirmation-title">
-          <button className="modal-close" aria-label="Tutup konfirmasi" onClick={() => setConfirmed(false)}><X size={14} /></button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="modal-close absolute top-4 right-4 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+            aria-label="Tutup konfirmasi"
+            onClick={() => setConfirmed(false)}
+          >
+            <X size={14} />
+          </Button>
           <span className="modal-overline">KONFIRMASI PENDAFTARAN & JADWAL</span>
           <span className="confirmation-icon"><Check size={20} /></span>
           <h2 id="booking-confirmation-title">Pendaftaran & jadwal berhasil<br />dikonfirmasi</h2>
@@ -88,7 +142,12 @@ export default function SchedulePage({ form, onNavigate }) {
             <div className="ticket-detail"><Building2 size={13} /> Ruang Terapi 02</div>
           </div>
           <p className="modal-reminder">Mohon hadir 10 menit sebelum sesi dimulai. Hubungi admin jika perlu mengubah jadwal.</p>
-          <button className="primary-button modal-home-button" onClick={() => onNavigate("home")}>Kembali ke beranda</button>
+          <Button
+            className="primary-button modal-home-button w-full bg-[#524480] hover:bg-[#43376B] text-white font-bold py-3 rounded-full shadow-md mt-4"
+            onClick={() => onNavigate("home")}
+          >
+            Kembali ke beranda
+          </Button>
           <small className="modal-footnote">Data contoh · Konfirmasi akan tersimpan pada sistem saat terhubung ke backend.</small>
         </section>
       </div>}

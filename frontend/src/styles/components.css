@@ -1,0 +1,849 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply m-0 bg-slate-50 font-sans text-slate-700 antialiased;
+  }
+
+  button,
+  input,
+  select {
+    @apply font-sans text-slate-700 antialiased;
+  }
+}
+
+@layer components {
+  .subpage,
+  .schedule-page {
+    @apply min-h-screen max-md:p-4;
+  }
+  .registration-page {
+    @apply pt-0;
+  }
+  .bg-form {
+    @apply w-full;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+      url("../assets/images/bg-naira-landing.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .bg-login {
+    @apply w-full;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),
+      url("../assets/images/bg-naira-hero.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .page-container,
+  .schedule-container {
+    @apply mx-auto w-[min(1120px,100%)];
+  }
+ 
+  .form-heading h1,
+  .schedule-title h1 {
+    @apply mt-3 font-display text-3xl font-bold leading-tight text-slate-800 max-md:text-2xl;
+  }
+  .form-heading p,
+  .schedule-title p {
+    @apply mt-2 max-w-xl text-[15px] leading-7 text-slate-500;
+  }
+  .form-headline,
+  .schedule-breadcrumb,
+  .summary-overline,
+  .modal-overline {
+    @apply text-[14px] font-medium tracking-wider text-[#524480];
+  }
+  .registration-stepper {
+    @apply my-6 flex items-center gap-3;
+  }
+  .registration-step {
+    @apply flex items-center gap-2 text-xs text-slate-400;
+  }
+  .registration-step span {
+    @apply grid h-7 w-7 place-items-center rounded-full bg-slate-200 font-semibold;
+  }
+  .registration-step.active span {
+    @apply bg-[#524480] text-white;
+  }
+  .registration-step.active h2 {
+    @apply text-[#524480] text-[12px] font-bold;
+  }
+  .registration-stepper i {
+    @apply h-px w-14 bg-slate-200;
+  }
+  .registration-layout {
+    @apply grid grid-cols-[1fr_280px] items-start gap-5 max-lg:grid-cols-1 text-sm font-light text-slate-600 max-md:gap-3;
+  }
+  .registration-form {
+    @apply min-w-0 ;
+  }
+  .form-card,
+  .registration-help,
+  .availability-card,
+  .schedule-filter,
+  .booking-summary {
+    @apply mb-5 rounded-xl border border-[#524480] bg-white p-7 shadow-sm;
+  }
+  .form-card-title {
+    @apply mb-6 flex items-center gap-3;
+  }
+  .form-card-title h2,
+  .registration-help h2,
+  .schedule-filter h2,
+  .availability-heading h2 {
+    @apply font-display text-base font-bold text-slate-800;
+  }
+  .form-card-title p {
+    @apply mt-1 text-xs text-slate-400;
+  }
+  .number {
+    @apply grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-[15px] font-bold text-brand-500;
+  }
+  .form-grid {
+    @apply grid grid-cols-2 gap-5 max-md:grid-cols-1 text-slate-600;
+  }
+  .form-grid input,
+  .form-grid select,
+  .schedule-filter select {
+    @apply w-full rounded-lg border border-slate-200 bg-white p-3 text-[14px] font-semibold text-slate-600 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10;
+  }
+  .select-wrap {
+    @apply relative w-full;
+  }
+  .form-grid .select-wrap select {
+    @apply appearance-none pr-10;
+  }
+  .select-chevron {
+    @apply pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400;
+  }
+  .gender-options {
+    @apply grid grid-cols-2 gap-2;
+  }
+  .gender-option {
+    @apply relative cursor-pointer;
+  }
+  .form-grid .gender-option input {
+    @apply absolute h-px w-px opacity-0;
+    clip: rect(0 0 0 0);
+  }
+  .gender-option span {
+    @apply flex h-[46px] items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-600 transition;
+  }
+  .gender-option input:hover + span {
+    @apply border-brand-100 bg-brand-50;
+  }
+  .gender-option input:checked + span {
+    @apply border-brand-500 bg-brand-50 text-brand-600;
+  }
+  .gender-option input:focus-visible + span {
+    @apply ring-2 ring-brand-500/20 ring-offset-1;
+  }
+  .choice-grid {
+    @apply grid grid-cols-2 gap-2 max-md:grid-cols-1;
+  }
+  .choice-check {
+    @apply flex min-h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600;
+  }
+  .choice-check input {
+    @apply h-4 w-4 flex-none accent-brand-500;
+  }
+  .form-section-divider {
+    @apply my-7 border-t border-slate-100 pt-5 text-xs font-bold text-slate-400;
+  }
+  .form-footer {
+    @apply flex items-center justify-between gap-5 max-md:flex-col max-md:items-stretch;
+  }
+  .form-submit-error {
+    @apply max-w-sm text-right text-xs font-semibold text-red-600 max-md:text-left;
+  }
+  .primary-button:disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
+  .auth-page {
+    @apply flex min-h-screen w-full items-center justify-center bg-slate-50 p-8 md:p-10 max-md:p-4;
+  }
+  .auth-layout {
+    @apply mx-auto grid min-h-[620px] w-[min(960px,100%)] grid-cols-[0.85fr_1.15fr] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr] max-lg:w-[min(760px,100%)] max-lg:grid-cols-1 max-md:min-h-[calc(100vh-32px)] max-md:rounded-xl;
+  }
+  .auth-aside {
+    @apply flex flex-col justify-center bg-[#66A3BF] px-10 py-12 text-slate-800 max-lg:px-8 max-lg:py-7 max-md:px-5 max-md:py-5;
+  }
+  .auth-overline {
+    @apply text-xs font-bold tracking-widest text-slate-800 max-md:text-[11px];
+  }
+  .auth-aside h1 {
+    @apply mt-3 font-display text-3xl font-bold leading-tight max-lg:text-2xl max-md:mt-2 max-md:text-xl;
+  }
+  .auth-aside p {
+    @apply mt-3 text-sm leading-7 text-slate-800 max-lg:mt-2 max-lg:leading-6 max-md:text-xs max-md:leading-5;
+  }
+  .auth-benefit {
+    @apply mt-6 flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-xs text-[#524480] font-semibold max-lg:mt-4 max-md:hidden;
+  }
+  .auth-card {
+    @apply flex flex-col justify-center px-10 py-8 max-lg:px-8 max-md:px-5 max-md:py-5;
+  }
+  .auth-tabs {
+    @apply mb-6 grid grid-cols-2  border border-slate-200 bg-slate-50 p-1 max-md:mb-4;
+  }
+  .auth-tabs button {
+    @apply w-full rounded-md border-0 px-3 py-2.5 text-sm font-bold max-md:py-2;
+  }
+  .auth-tabs button[aria-selected="true"],
+  .auth-tabs button.active {
+    @apply bg-white text-[#524480] shadow-sm;
+  }
+  .auth-form {
+    @apply grid gap-4 max-md:gap-3;
+  }
+  .auth-form label {
+    @apply grid gap-2 text-xs font-bold text-slate-600;
+  }
+  .auth-input {
+    @apply flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-slate-400 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/10;
+  }
+  .auth-input input {
+    @apply w-full border-0 bg-transparent px-0 py-3 text-sm font-medium text-slate-700 outline-none max-md:py-2.5 max-md:text-xs;
+  }
+  .auth-password-toggle {
+    @apply flex h-8 w-8 flex-none items-center justify-center rounded-md border-0 bg-transparent text-slate-400 hover:bg-slate-100 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/20;
+  }
+  .auth-error {
+    @apply rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-xs font-semibold text-red-600;
+  }
+  .auth-submit {
+    @apply mt-1 w-full;
+  }
+  .auth-footer {
+    @apply mt-2 flex items-center justify-between text-sm text-slate-400;
+  }
+  .auth-footer button {
+    @apply text-[#524480] font-bold hover:underline;
+  }
+  .logout-button {
+    @apply bg-slate-700 hover:bg-slate-800;
+  }
+  .form-footer p,
+  .example-note,
+  .filter-note,
+  .schedule-disclaimer {
+    @apply flex items-center gap-2 text-xs text-slate-400;
+  }
+  .primary-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border-0 bg-[#524480] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-brand-500/20 hover:bg-brand-600;
+  }
+  .registration-help {
+    @apply relative bg-emerald-50;
+  }
+  .help-icon,
+  .profile-avatar,
+  .confirmation-icon {
+    @apply grid h-9 w-9 place-items-center rounded-full bg-[#C8DFDB] text-[#524480];
+  }
+  .help-title {
+    @apply absolute left-[70px] text-[#524480];
+  }
+  .registration-help p {
+    @apply mt-3 text-xs leading-6 text-slate-500;
+  }
+  .example-note {
+    @apply mt-5 border-t border-[#C8DFDB] pt-4 text-[#524480];
+  }
+  .example-note p {
+    @apply mt-1 text-xs text-slate-400;
+  }
+  .schedule-breadcrumb {
+    @apply mb-5 text-slate-400;
+  }
+  .schedule-title {
+    @apply mb-7;
+  }
+  .child-profile {
+    @apply mb-5 flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4;
+  }
+  .child-profile strong,
+  .child-profile small {
+    @apply block;
+  }
+  .child-profile small {
+    @apply mt-1 text-xs text-slate-400;
+  }
+  .verified-badge {
+    @apply ml-auto inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-bold text-brand-500;
+  }
+  .schedule-layout {
+    @apply grid grid-cols-[240px_1fr_240px] items-start gap-5 max-xl:grid-cols-2 max-md:grid-cols-1;
+  }
+  .schedule-filter h2 {
+    @apply mb-5;
+  }
+  .schedule-filter label,
+  .filter-caption {
+    @apply mb-2 block text-xs font-bold text-slate-500;
+  }
+  .filter-caption {
+    @apply mt-3 font-normal text-slate-400;
+  }
+  .month-picker {
+    @apply my-5 flex items-center justify-between text-xs;
+  }
+  .month-picker button,
+  .mini-days button {
+    @apply border-0 bg-transparent text-slate-500;
+  }
+  .mini-days {
+    @apply grid grid-cols-5 gap-1;
+  }
+  .mini-days button {
+    @apply rounded-lg p-2 text-center;
+  }
+  .mini-days button.active {
+    @apply bg-emerald-50 text-brand-500;
+  }
+  .mini-days b,
+  .mini-days strong {
+    @apply block;
+  }
+  .mini-days strong {
+    @apply mt-1 text-lg;
+  }
+  .filter-note {
+    @apply mt-6 items-start leading-5;
+  }
+  .availability-heading {
+    @apply flex items-start justify-between gap-4 max-md:flex-col;
+  }
+  .availability-heading p {
+    @apply mt-1 text-xs text-slate-400;
+  }
+  .availability-legend {
+    @apply flex gap-3 text-[10px] text-slate-400;
+  }
+  .dot {
+    @apply mr-1 inline-block h-2 w-2 rounded-full bg-brand-500;
+  }
+  .selected-dot {
+    @apply bg-amber-400;
+  }
+  .unavailable {
+    @apply bg-slate-100 text-slate-300;
+  }
+  .slot-grid {
+    @apply mt-6 grid grid-cols-3 gap-3 max-md:grid-cols-2;
+  }
+  .slot {
+    @apply rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-left text-xs text-brand-900;
+  }
+  .slot.selected {
+    @apply border-brand-500 bg-brand-500 text-white;
+  }
+  .slot strong,
+  .slot b,
+  .slot small {
+    @apply block;
+  }
+  .slot b {
+    @apply my-1 text-lg;
+  }
+  .slot-warning {
+    @apply mt-5 text-xs text-slate-400;
+  }
+  .booking-summary {
+    @apply sticky top-5;
+  }
+  .booking-summary dl {
+    @apply mt-5;
+  }
+  .booking-summary dt {
+    @apply mt-4 text-xs text-slate-400;
+  }
+  .booking-summary dd {
+    @apply mt-1 text-sm font-bold text-slate-700;
+  }
+  .booking-summary .primary-button {
+    @apply mt-6 w-full;
+  }
+  .summary-note,
+  .modal-intro,
+  .modal-reminder,
+  .modal-footnote {
+    @apply mt-4 text-xs leading-5 text-slate-400;
+  }
+  .booking-modal-backdrop {
+    @apply fixed inset-0 z-50 grid place-items-center bg-slate-900/50 p-5;
+  }
+  .booking-modal {
+    @apply relative max-h-[90vh] w-full max-w-md overflow-auto rounded-2xl bg-white p-8 text-center;
+  }
+  .modal-close {
+    @apply absolute right-4 top-4 border-0 bg-transparent text-slate-400;
+  }
+  .confirmation-icon {
+    @apply mx-auto mt-5;
+  }
+  .booking-modal h2 {
+    @apply mt-4 font-display text-2xl font-bold text-slate-800;
+  }
+  .booking-ticket {
+    @apply mt-5 rounded-xl bg-emerald-50 p-5 text-left;
+  }
+  .ticket-code {
+    @apply flex justify-between text-xs text-slate-400;
+  }
+  .ticket-code strong {
+    @apply text-brand-500;
+  }
+  .booking-ticket h3 {
+    @apply mt-5 font-display font-bold text-slate-800;
+  }
+  .booking-ticket p {
+    @apply text-xs text-slate-400;
+  }
+  .ticket-detail {
+    @apply mt-3 flex items-center gap-2 text-xs text-slate-600;
+  }
+  .modal-home-button {
+    @apply mt-6 w-full;
+  }
+  .admin-dashboard {
+    @apply flex min-h-screen bg-[#f7f8fc];
+  }
+  .admin-sidebar {
+    @apply flex w-[230px] shrink-0 flex-col bg-[#7C6FA3] p-6 text-white max-lg:fixed max-lg:inset-y-0 max-lg:z-40 max-lg:-translate-x-full max-lg:transition-transform;
+  }
+  .admin-sidebar.open {
+    @apply translate-x-0;
+  }
+  .admin-brand {
+    @apply mb-10 flex items-center gap-3;
+  }
+  .logo-mark {
+    @apply grid h-10 w-10 place-items-center rounded-xl bg-white/35 text-lg;
+  }
+  .admin-brand strong,
+  .admin-brand small {
+    @apply block;
+  }
+  .admin-brand strong {
+    @apply font-display text-sm font-bold;
+  }
+  .admin-brand small {
+    @apply mt-1 text-[7px] tracking-[0.16em] text-white/75;
+  }
+  .sidebar-close {
+    @apply ml-auto border-0 bg-transparent text-white lg:hidden;
+  }
+  .sidebar-label {
+    @apply mb-3 text-[9px] font-bold tracking-[0.18em] text-white/70;
+  }
+  .sidebar-nav {
+    @apply grid gap-2;
+  }
+  .sidebar-nav button,
+  .sidebar-logout {
+    @apply flex w-full items-center gap-3 rounded-xl border-0 bg-transparent p-3 text-left text-xs text-white/85 transition hover:bg-white/15;
+  }
+  .sidebar-nav button.active {
+    @apply bg-white text-[#58458A] shadow-sm;
+  }
+  .sidebar-tip {
+    @apply mt-auto flex gap-2 rounded-xl bg-white/15 p-3 text-[10px] leading-5 text-white/85;
+  }
+  .sidebar-logout {
+    @apply mt-5 text-white/80;
+  }
+  .admin-content {
+    @apply min-w-0 flex-1;
+  }
+  .admin-topbar {
+    @apply flex h-16 items-center justify-between border-b border-[#ececf4] bg-white px-8 max-md:px-4;
+  }
+  .sidebar-toggle {
+    @apply border-0 bg-transparent text-slate-600 lg:hidden;
+  }
+  .admin-search {
+    @apply flex w-72 items-center gap-2 rounded-full border border-[#eeeef4] bg-[#fafafd] px-4 py-2 text-slate-400 max-md:w-[min(240px,55vw)];
+  }
+  .admin-search input {
+    @apply min-w-0 border-0 bg-transparent text-xs outline-none;
+  }
+  .topbar-actions {
+    @apply flex items-center gap-3;
+  }
+  .topbar-icon {
+    @apply relative grid h-9 w-9 place-items-center rounded-full border-0 bg-[#f6f4fb] text-[#58458A];
+  }
+  .topbar-icon span {
+    @apply absolute right-2 top-2 h-1.5 w-1.5 rounded-full border border-white bg-[#ef9da7];
+  }
+  .admin-user {
+    @apply flex items-center gap-2 border-0 bg-transparent text-xs text-slate-600;
+  }
+  .admin-user span {
+    @apply grid h-8 w-8 place-items-center rounded-full bg-[#dff3ea] text-[10px] font-bold text-[#5aa18a];
+  }
+  .dashboard-content {
+    @apply p-7 max-md:p-4;
+  }
+  .dashboard-heading {
+    @apply mb-6 flex items-end justify-between max-md:items-start;
+  }
+  .dashboard-heading h1 {
+    @apply mt-1 font-display text-2xl font-extrabold text-[#2A2345];
+  }
+  .dashboard-heading p,
+  .dashboard-heading small {
+    @apply text-[11px] text-slate-400;
+  }
+  .dashboard-heading small {
+    @apply mt-1 block;
+  }
+  .dashboard-overline {
+    @apply mb-1 font-bold tracking-[0.16em] text-[#7C6FA3];
+  }
+  .admin-stat-grid {
+    @apply mb-5 grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-md:grid-cols-2;
+  }
+  .admin-stat-grid > div {
+    @apply relative min-h-[116px] overflow-hidden rounded-2xl border border-white/70 p-5 shadow-[0_8px_25px_rgba(92,88,120,0.04)];
+  }
+  .admin-stat-grid span,
+  .admin-stat-grid small {
+    @apply block text-xs text-slate-400;
+  }
+  .admin-stat-grid strong {
+    @apply my-1 block font-display text-3xl text-[#2A2345];
+  }
+  .admin-stat-grid svg {
+    @apply absolute right-5 top-5 h-9 w-9 rounded-xl p-2;
+  }
+  .stat-peach { @apply bg-[#fff2e8]; }
+  .stat-lilac { @apply bg-[#efedfb]; }
+  .stat-mint { @apply bg-[#eaf7f1]; }
+  .stat-blue { @apply bg-[#edf4fb]; }
+  .stat-peach svg { @apply bg-[#f7c9af] text-[#a96d55]; }
+  .stat-lilac svg { @apply bg-[#cbc6eb] text-[#58458A]; }
+  .stat-mint svg { @apply bg-[#bfe2d1] text-[#5a987e]; }
+  .stat-blue svg { @apply bg-[#c9dcef] text-[#6683a6]; }
+  .dashboard-main-grid {
+    @apply mb-5 grid grid-cols-[1.08fr_0.92fr] gap-5 max-lg:grid-cols-1;
+  }
+  .lower-grid {
+    @apply grid-cols-[1.18fr_0.82fr];
+  }
+  .dashboard-card,
+  .registration-history {
+    @apply rounded-2xl border border-[#efeff5] bg-white p-5 shadow-[0_8px_30px_rgba(92,88,120,0.035)];
+  }
+  .dashboard-card-heading,
+  .calendar-month {
+    @apply flex items-center justify-between;
+  }
+  .dashboard-card-heading h2,
+  .history-heading h2 {
+    @apply font-display text-[14px] font-bold text-[#2A2345];
+  }
+  .dashboard-card-heading p,
+  .history-heading p {
+    @apply mt-1 text-[10px] text-slate-400;
+  }
+  .month-switch {
+    @apply flex items-center gap-1 rounded-lg border border-[#efeff5] bg-white p-1 text-slate-400;
+  }
+  .text-link {
+    @apply flex items-center gap-1 border-0 bg-transparent text-[10px] font-semibold text-[#58458A];
+  }
+  .calendar-month {
+    @apply my-5;
+  }
+  .calendar-month strong {
+    @apply text-xs text-[#2A2345];
+  }
+  .calendar-month span {
+    @apply flex items-center gap-1 text-[9px] text-slate-400;
+  }
+  .calendar-month i {
+    @apply h-2 w-2 rounded-full bg-[#7C6FA3];
+  }
+  .calendar-weekdays,
+  .calendar-grid {
+    @apply grid grid-cols-7 text-center;
+  }
+  .calendar-weekdays span {
+    @apply pb-3 text-[9px] font-bold text-slate-400;
+  }
+  .calendar-grid span {
+    @apply mx-auto grid h-8 w-8 place-items-center rounded-full text-[10px] font-semibold text-[#616579];
+  }
+  .calendar-grid span.muted {
+    @apply text-slate-300;
+  }
+  .calendar-grid span.has-session {
+    @apply text-white;
+  }
+  .calendar-grid span.has-session.mint {
+    @apply bg-[#9fcdb8];
+  }
+  .calendar-grid span.has-session.lilac {
+    @apply bg-[#7C6FA3];
+  }
+  .performance-list {
+    @apply mt-5 grid gap-4;
+  }
+  .performance-list > div {
+    @apply grid grid-cols-[10px_1fr_auto] items-center gap-3;
+  }
+  .performance-list p,
+  .activity-list p {
+    @apply m-0;
+  }
+  .performance-list p b,
+  .performance-list p small {
+    @apply block;
+  }
+  .performance-list p b {
+    @apply text-[11px] text-[#4b4e60];
+  }
+  .performance-list p small {
+    @apply mt-1 text-[9px] text-slate-400;
+  }
+  .performance-list strong {
+    @apply text-xs text-[#4b4e60];
+  }
+  .performance-list i {
+    @apply col-start-2 col-end-4 h-1.5 overflow-hidden rounded-full bg-[#f1f1f5];
+  }
+  .performance-list em {
+    @apply block h-full rounded-full;
+  }
+  .legend {
+    @apply h-2.5 w-2.5 rounded-full;
+  }
+  .legend.lilac,
+  .bar-lilac { @apply bg-[#7C6FA3]; }
+  .legend.peach,
+  .bar-peach { @apply bg-[#f0b99a]; }
+  .legend.mint,
+  .bar-mint { @apply bg-[#9fcdb8]; }
+  .top-student-grid {
+    @apply mt-4 grid grid-cols-3 gap-3 max-md:grid-cols-1;
+  }
+  .top-student {
+    @apply relative min-h-[180px] rounded-2xl p-4 text-white;
+  }
+  .top-student.mint { @apply bg-[#9fcdb8]; }
+  .top-student.lilac { @apply bg-[#7C6FA3]; }
+  .top-student.peach { @apply bg-[#efb99f]; }
+  .student-avatar {
+    @apply mb-7 grid h-10 w-10 place-items-center rounded-full border-2 border-white/70 bg-white/25 text-xs font-bold;
+  }
+  .rank {
+    @apply absolute right-3 top-3 rounded-full bg-white/25 px-2 py-1 text-[9px] font-bold;
+  }
+  .top-student h3 {
+    @apply text-xs font-bold;
+  }
+  .top-student p {
+    @apply mt-1 text-[9px] text-white/80;
+  }
+  .top-student strong {
+    @apply mt-4 block text-xl;
+  }
+  .activity-list {
+    @apply mt-3 grid;
+  }
+  .activity-list article {
+    @apply flex items-center gap-3 border-b border-[#f3f3f7] py-3 last:border-0;
+  }
+  .activity-icon {
+    @apply grid h-8 w-8 shrink-0 place-items-center rounded-xl;
+  }
+  .activity-icon.lilac { @apply bg-[#efedfb] text-[#58458A]; }
+  .activity-icon.peach { @apply bg-[#fff2e8] text-[#b47b62]; }
+  .activity-icon.mint { @apply bg-[#eaf7f1] text-[#5a987e]; }
+  .activity-list strong {
+    @apply block text-[11px] text-[#4b4e60];
+  }
+  .activity-list p {
+    @apply mt-1 text-[9px] text-slate-400;
+  }
+  .registration-history {
+    @apply mt-5;
+  }
+  .history-heading {
+    @apply flex items-center justify-between max-md:block;
+  }
+  .history-heading h2 {
+    @apply font-display text-lg font-bold text-slate-800;
+  }
+  .history-heading p {
+    @apply mt-1 text-xs text-slate-400;
+  }
+  .history-filters {
+    @apply my-5 flex gap-3;
+  }
+  .history-filters button {
+    @apply inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500;
+  }
+  .admin-table-wrap {
+    @apply overflow-x-auto;
+  }
+  .admin-table {
+    @apply w-full min-w-[900px] border-collapse text-xs text-slate-500;
+  }
+  .admin-table th {
+    @apply border-b border-slate-100 p-3 text-left text-[10px] uppercase tracking-wide text-slate-400;
+  }
+  .admin-table td {
+    @apply border-b border-slate-100 p-3;
+  }
+  .admin-table td strong,
+  .admin-table td small {
+    @apply block;
+  }
+  .admin-table td small {
+    @apply mt-1 text-[10px] text-slate-400;
+  }
+  .admin-status {
+    @apply rounded-full px-2 py-1 text-[10px] font-bold;
+  }
+  .admin-status.confirmed {
+    @apply bg-emerald-50 text-brand-500;
+  }
+  .admin-status.unscheduled {
+    @apply bg-amber-50 text-amber-600;
+  }
+  .row-action {
+    @apply border-0 bg-transparent text-brand-500;
+  }
+  .history-footer {
+    @apply mt-5 flex justify-between text-xs text-slate-400;
+  }
+  .history-footer button {
+    @apply border-0 bg-transparent px-2 text-slate-500;
+  }
+  .history-footer .current {
+    @apply rounded bg-brand-500 text-white;
+  }
+  .admin-disclaimer {
+    @apply mt-5 flex items-center gap-2 text-xs text-slate-400;
+  }
+}
+
+@media (max-width: 767px) {
+  .form-card,
+  .registration-help,
+  .availability-card,
+  .schedule-filter,
+  .booking-summary {
+    padding: 1rem;
+  }
+
+  .registration-stepper {
+    gap: 0.5rem;
+  }
+
+  .registration-step {
+    min-width: 0;
+    flex: 1 1 0;
+    gap: 0.375rem;
+  }
+
+  .registration-step h2,
+  .registration-step.active h2 {
+    font-size: 0.625rem;
+    line-height: 1.25;
+  }
+
+  .registration-stepper i {
+    width: auto;
+    flex: 0 0 clamp(0.5rem, 4vw, 1.5rem);
+  }
+
+  .child-profile {
+    flex-wrap: wrap;
+  }
+
+  .child-profile > div {
+    min-width: 0;
+    flex: 1 1 calc(100% - 3.5rem);
+  }
+
+  .verified-badge {
+    margin-left: 3rem;
+  }
+
+  .availability-legend {
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .slot-warning,
+  .schedule-disclaimer {
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .booking-summary {
+    position: static;
+  }
+
+  .booking-modal {
+    padding: 1.25rem;
+  }
+
+  .history-filters {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 1279px) {
+  .schedule-layout {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-areas:
+      "filter availability"
+      "summary availability";
+    gap: 1rem;
+  }
+
+  .schedule-filter {
+    grid-area: filter;
+  }
+
+  .availability-card {
+    grid-area: availability;
+    min-width: 0;
+  }
+
+  .booking-summary {
+    grid-area: summary;
+  }
+}
+
+@media (max-width: 767px) {
+  .schedule-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "filter"
+      "availability"
+      "summary";
+  }
+
+  .schedule-filter,
+  .availability-card,
+  .booking-summary {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 359px) {
+  .admin-stat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
