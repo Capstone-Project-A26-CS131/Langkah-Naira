@@ -2,6 +2,8 @@ import React from "react";
 import axios from "axios";
 import {
   ArrowLeft,
+  Check,
+  Circle,
   Eye,
   EyeOff,
   LockKeyhole,
@@ -25,13 +27,79 @@ export default function AuthPage({ onNavigate, onAuthenticated }) {
   const update = (key) => (event) =>
     setForm((current) => ({ ...current, [key]: event.target.value }));
 
+  const passwordRules = [
+    {
+      id: "length",
+      passed: form.password.length >= 6 && form.password.length <= 50,
+      passLabel: "Minimal 6 karakter terpenuhi (wajib)",
+      failLabel: "Minimal 6 karakter (maks. 50) — wajib",
+    },
+    {
+      id: "upper",
+      passed: /[A-Z]/.test(form.password),
+      passLabel: "Sudah ada huruf besar (A–Z)",
+      failLabel: "Tambahkan huruf besar (A–Z)",
+    },
+    {
+      id: "lower",
+      passed: /[a-z]/.test(form.password),
+      passLabel: "Sudah ada huruf kecil (a–z)",
+      failLabel: "Tambahkan huruf kecil (a–z)",
+    },
+    {
+      id: "number",
+      passed: /[0-9]/.test(form.password),
+      passLabel: "Sudah ada angka (0–9)",
+      failLabel: "Tambahkan angka (0–9)",
+    },
+    {
+      id: "symbol",
+      passed: /[^A-Za-z0-9]/.test(form.password),
+      passLabel: "Sudah ada karakter simbol",
+      failLabel: "Tambahkan karakter simbol (opsional)",
+    },
+  ];
+
+  const passedCount = passwordRules.filter((rule) => rule.passed).length;
+  const strengthMeta =
+    form.password.length === 0
+      ? { label: "", barClass: "w-0 bg-slate-200", textClass: "text-slate-400" }
+      : passedCount <= 2
+        ? { label: "Lemah", barClass: "w-1/4 bg-red-500", textClass: "text-red-600" }
+        : passedCount === 3
+          ? { label: "Cukup", barClass: "w-2/4 bg-amber-500", textClass: "text-amber-600" }
+          : passedCount === 4
+            ? { label: "Kuat", barClass: "w-3/4 bg-[#0077B6]", textClass: "text-[#0077B6]" }
+            : { label: "Sangat Kuat", barClass: "w-full bg-[#22B559]", textClass: "text-[#1E974B]" };
+
   const submit = async (event) => {
     event.preventDefault();
     setError("");
-    setLoading(true);
 
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
     const isRegister = mode === "register";
+
+    if (isRegister) {
+      const trimmedName = form.name.trim();
+      if (trimmedName.length < 3) {
+        setError("Nama minimal 3 karakter.");
+        return;
+      }
+      if (trimmedName.length > 150) {
+        setError("Nama maksimal 150 karakter.");
+        return;
+      }
+      if (form.phone.trim() && !/^[0-9+() -]{9,20}$/.test(form.phone.trim())) {
+        setError("Format nomor telepon tidak valid.");
+        return;
+      }
+      if (form.password.length < 6 || form.password.length > 50) {
+        setError("Password minimal 6 karakter (maksimal 50 karakter).");
+        return;
+      }
+    }
+
+    setLoading(true);
     const payload = isRegister
       ? {
         name: form.name,
@@ -60,7 +128,7 @@ export default function AuthPage({ onNavigate, onAuthenticated }) {
       if (user.role === "admin") {
         onNavigate("dashboard");
       } else {
-        onNavigate("register");
+        onNavigate("portal");
       }
     } catch (requestError) {
       const details = requestError.response?.data?.details;
@@ -111,8 +179,8 @@ export default function AuthPage({ onNavigate, onAuthenticated }) {
               role="tab"
               aria-selected={mode === "login"}
               className={`flex-1 rounded-lg text-xs font-bold transition-all ${mode === "login"
-                  ? "bg-white text-[#524480] shadow-sm hover:bg-white"
-                  : "bg-transparent text-[#786E95] hover:text-[#524480] hover:bg-transparent"
+                ? "bg-white text-[#524480] shadow-sm hover:bg-white"
+                : "bg-transparent text-[#786E95] hover:text-[#524480] hover:bg-transparent"
                 }`}
               onClick={() => {
                 setMode("login");
@@ -129,8 +197,8 @@ export default function AuthPage({ onNavigate, onAuthenticated }) {
               role="tab"
               aria-selected={mode === "register"}
               className={`flex-1 rounded-lg text-xs font-bold transition-all ${mode === "register"
-                  ? "bg-white text-[#524480] shadow-sm hover:bg-white"
-                  : "bg-transparent text-[#786E95] hover:text-[#524480] hover:bg-transparent"
+                ? "bg-white text-[#524480] shadow-sm hover:bg-white"
+                : "bg-transparent text-[#786E95] hover:text-[#524480] hover:bg-transparent"
                 }`}
               onClick={() => {
                 setMode("register");
@@ -221,6 +289,41 @@ export default function AuthPage({ onNavigate, onAuthenticated }) {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </Button>
               </div>
+              {mode === "register" && (
+                <div className="mt-2.5 rounded-xl border border-[#ECE7F6] bg-[#FAF9FD] p-3 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-[#5E5579]">
+                      Validasi &amp; Keamanan Password
+                    </span>
+                    {strengthMeta.label && (
+                      <span className={`font-bold ${strengthMeta.textClass}`}>
+                        {strengthMeta.label}
+                      </span>
+                    )}
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#ECE7F6]">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${strengthMeta.barClass}`}
+                    />
+                  </div>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-0.5">
+                    {passwordRules.map((rule) => (
+                      <li
+                        key={rule.id}
+                        className={`flex items-center gap-1.5 text-[11px] font-medium ${rule.passed ? "text-[#1E974B]" : "text-[#786E95]"
+                          }`}
+                      >
+                        {rule.passed ? (
+                          <Check size={12} className="shrink-0 text-[#22B559]" />
+                        ) : (
+                          <Circle size={10} className="shrink-0 text-[#B8B0CF]" />
+                        )}
+                        <span>{rule.passed ? rule.passLabel : rule.failLabel}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </label>
 
             {error && <p className="auth-error text-xs font-semibold text-[#D93838] bg-[#FDF2F2] p-3 rounded-xl border border-[#FAD7D7]" role="alert">{error}</p>}

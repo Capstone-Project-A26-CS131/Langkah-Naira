@@ -1,9 +1,14 @@
-import React from "react";
-import { Building2, CalendarDays, Check, Clock3, LockKeyhole, UserRound, X } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { ArrowLeft, Building2, CalendarDays, Check, Clock3, LockKeyhole, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function SchedulePage({ form, onNavigate }) {
+export default function SchedulePage({
+  form,
+  onNavigate,
+  embedded = false,
+  embeddedBackLabel = "Kembali ke Ringkasan Dashboard",
+  embeddedModalButtonLabel = "Kembali ke Dashboard",
+}) {
   const [selected, setSelected] = useState({ day: "Sen", date: "16", time: "09.00–10.00 WIB" });
   const [therapist, setTherapist] = useState("Siti Rahma, S.Tr.Ter");
   const [confirmed, setConfirmed] = useState(false);
@@ -27,9 +32,22 @@ export default function SchedulePage({ form, onNavigate }) {
     setSelected({ ...date, time: `${time}–${String(Number(time.split(".")[0]) + 1).padStart(2, "0")}.00 WIB` });
   };
 
+  const Wrapper = embedded ? "div" : "main";
+  const wrapperClass = embedded ? "w-full" : "schedule-page";
+  const containerClass = embedded ? "w-full" : "schedule-container";
+
   return (
-    <main className="schedule-page">
-      <div className="schedule-container">
+    <Wrapper className={wrapperClass}>
+      <div className={containerClass}>
+        {embedded && (
+          <Button
+            variant="ghost"
+            className="back-link h-auto p-0 mb-3 text-[#524480] hover:text-[#3B325E] hover:bg-transparent font-medium inline-flex items-center gap-1.5"
+            onClick={() => onNavigate("dashboard")}
+          >
+            <ArrowLeft size={13} /> {embeddedBackLabel}
+          </Button>
+        )}
         <p className="schedule-breadcrumb">Pendaftaran / Profil anak / Pilih jadwal</p>
         <div className="schedule-title">
           <h1>Pilih waktu terbaik untuk si kecil</h1>
@@ -144,13 +162,16 @@ export default function SchedulePage({ form, onNavigate }) {
           <p className="modal-reminder">Mohon hadir 10 menit sebelum sesi dimulai. Hubungi admin jika perlu mengubah jadwal.</p>
           <Button
             className="primary-button modal-home-button w-full bg-[#524480] hover:bg-[#43376B] text-white font-bold py-3 rounded-full shadow-md mt-4"
-            onClick={() => onNavigate("home")}
+            onClick={() => {
+              setConfirmed(false);
+              onNavigate(embedded ? "dashboard" : "home");
+            }}
           >
-            Kembali ke beranda
+            {embedded ? embeddedModalButtonLabel : "Kembali ke beranda"}
           </Button>
           <small className="modal-footnote">Data contoh · Konfirmasi akan tersimpan pada sistem saat terhubung ke backend.</small>
         </section>
       </div>}
-    </main>
+    </Wrapper>
   );
 }

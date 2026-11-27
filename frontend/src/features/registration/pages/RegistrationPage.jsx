@@ -5,14 +5,184 @@ import {
   ArrowRight,
   Check,
   ChevronDown,
+  ImagePlus,
   ShieldCheck,
+  X,
 } from "lucide-react";
 import Field from "../../../components/forms/Field";
+import AiAutofillCard from "../components/AiAutofillCard";
 import { Button } from "@/components/ui/button";
 
-export default function RegistrationPage({ form, setForm, onNavigate }) {
+export default function RegistrationPage({
+  form,
+  setForm,
+  onNavigate,
+  embedded = false,
+  embeddedBackLabel = "Kembali ke Ringkasan Dashboard",
+}) {
   const [submitting, setSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState("");
+  const [photoFile, setPhotoFile] = React.useState(null);
+  const [photoPreview, setPhotoPreview] = React.useState("");
+  const [photoError, setPhotoError] = React.useState("");
+  const [activeStep, setActiveStep] = React.useState(1);
+  const fileInputRef = React.useRef(null);
+
+  const hasText = (value) =>
+    value !== undefined && value !== null && String(value).trim() !== "";
+
+  const isStep1Complete = Boolean(
+    hasText(form.full_name) &&
+      hasText(form.nickname) &&
+      hasText(form.gender) &&
+      hasText(form.birth_date) &&
+      hasText(form.birth_place) &&
+      hasText(form.religion) &&
+      (form.religion !== "Lainnya" || hasText(form.religion_other)) &&
+      (photoFile || hasText(form.photo_url)) &&
+      hasText(form.living_with) &&
+      (form.living_with !== "Lainnya" || hasText(form.living_with_other)) &&
+      hasText(form.blood_type) &&
+      hasText(form.height_cm) &&
+      hasText(form.weight_kg) &&
+      (form.hobbies || []).length > 0 &&
+      (!(form.hobbies || []).includes("Lainnya") || hasText(form.hobbies_other)),
+  );
+
+  const isStep2Complete = Boolean(
+    hasText(form.special_needs_diagnosis) &&
+      hasText(form.birth_history) &&
+      (form.birth_history !== "Lainnya" || hasText(form.birth_history_other)) &&
+      (hasText(form.health_notes_other) || (form.health_notes || []).length > 0) &&
+      (!form.is_allergic || hasText(form.allergy_detail)) &&
+      (!form.ever_hospitalized || hasText(form.hospitalized_detail)) &&
+      (!(form.health_aids || []).includes("Lainnya") ||
+        hasText(form.health_aids_other)),
+  );
+
+  const isStep3Complete = Boolean(
+    hasText(form.emergency_contact_1_phone) &&
+      hasText(form.emergency_contact_1_relation) &&
+      hasText(form.preferred_schedule),
+  );
+
+  const isStep4Complete = Boolean(
+    (form.personality_traits || []).length > 0 &&
+      (!(form.personality_traits || []).includes("Lainnya") ||
+        hasText(form.personality_other)) &&
+      (form.emotional_expressions || []).length > 0 &&
+      (!(form.emotional_expressions || []).includes("Lainnya") ||
+        hasText(form.emotional_other)) &&
+      hasText(form.social_frequency) &&
+      hasText(form.tv_hours_per_day) &&
+      hasText(form.gadget_hours_per_day) &&
+      hasText(form.independence_eating) &&
+      hasText(form.independence_toilet) &&
+      hasText(form.independence_wakeup) &&
+      hasText(form.independence_dressing) &&
+      hasText(form.independence_school_prep) &&
+      hasText(form.independence_belongings) &&
+      (form.family_activities || []).length > 0 &&
+      (!(form.family_activities || []).includes("Lainnya") ||
+        hasText(form.family_activities_other)),
+  );
+
+  const stepperSteps = [
+    {
+      id: 1,
+      label: "Data Pendaftaran",
+      targetId: "step-data-pendaftaran",
+      completed: isStep1Complete,
+    },
+    {
+      id: 2,
+      label: "Riwayat Kesehatan",
+      targetId: "step-riwayat-kesehatan",
+      completed: isStep2Complete,
+    },
+    {
+      id: 3,
+      label: "Kontak Darurat",
+      targetId: "step-kontak-darurat",
+      completed: isStep3Complete,
+    },
+    {
+      id: 4,
+      label: "Kebiasaan & Kemandirian",
+      targetId: "step-kebiasaan-kemandirian",
+      completed: isStep4Complete,
+    },
+  ];
+
+  const scrollToStep = (step) => {
+    setActiveStep(step.id);
+    const target = document.getElementById(step.targetId);
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - 96;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  };
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const marker = 180;
+      const step4El = document.getElementById("step-kebiasaan-kemandirian");
+      const step3El = document.getElementById("step-kontak-darurat");
+      const step2El = document.getElementById("step-riwayat-kesehatan");
+
+      if (step4El && step4El.getBoundingClientRect().top <= marker) {
+        setActiveStep(4);
+      } else if (step3El && step3El.getBoundingClientRect().top <= marker) {
+        setActiveStep(3);
+      } else if (step2El && step2El.getBoundingClientRect().top <= marker) {
+        setActiveStep(2);
+      } else {
+        setActiveStep(1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  React.useEffect(() => {
+    if (!photoFile) {
+      setPhotoPreview("");
+      return undefined;
+    }
+    const objectUrl = URL.createObjectURL(photoFile);
+    setPhotoPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [photoFile]);
+
+  const handlePhotoChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setPhotoError("Format foto harus JPG, PNG, atau WEBP.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setPhotoError("Ukuran foto maksimal 2 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setPhotoError("");
+    setPhotoFile(file);
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null);
+    setPhotoError("");
+    setForm((current) => ({ ...current, photo_url: "" }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const update = (key) => (event) =>
     setForm((current) => ({ ...current, [key]: event.target.value }));
@@ -109,9 +279,25 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
+      const createdStudent = response.data.data;
+      let uploadedPhotoUrl = createdStudent.photo_url || "";
+
+      if (photoFile) {
+        const photoData = new FormData();
+        photoData.append("photo", photoFile);
+        const photoResponse = await axios.post(
+          `${apiUrl}/api/students/${createdStudent.id}/photo`,
+          photoData,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        uploadedPhotoUrl =
+          photoResponse.data?.data?.photo_url || uploadedPhotoUrl;
+      }
+
       setForm((current) => ({
         ...current,
-        student_id: response.data.data.id,
+        student_id: createdStudent.id,
+        photo_url: uploadedPhotoUrl,
       }));
       onNavigate("schedule");
     } catch (error) {
@@ -129,16 +315,21 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
     }
   };
 
+  const Wrapper = embedded ? "div" : "main";
+  const wrapperClass = embedded ? "w-full" : "subpage registration-page";
+  const innerClass = embedded ? "w-full" : "hero-background p-5 max-md:py-4";
+  const containerClass = embedded ? "w-full" : "page-container";
+
   return (
-    <main className="subpage registration-page">
-      <section className="hero-background p-5 max-md:py-4">
-        <div className="page-container">
+    <Wrapper className={wrapperClass}>
+      <section className={innerClass}>
+        <div className={containerClass}>
           <Button
             variant="ghost"
             className="back-link h-auto p-0 text-[#524480] hover:text-[#3B325E] hover:bg-transparent font-medium inline-flex items-center gap-1.5"
-            onClick={() => onNavigate("home")}
+            onClick={() => onNavigate(embedded ? "dashboard" : "home")}
           >
-            <ArrowLeft size={13} /> Kembali ke beranda
+            <ArrowLeft size={13} /> {embedded ? embeddedBackLabel : "Kembali ke beranda"}
           </Button>
           <div className="form-heading">
             <div>
@@ -150,25 +341,37 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
               </p>
             </div>
           </div>
-          <div className="registration-stepper">
-            <div className="registration-step active">
-              <span>1</span>
-              <h2>Data Awal</h2>
-            </div>
-            <i />
-            <div className="registration-step">
-              <span>2</span>
-              <h2>Riwayat Kesehatan</h2>
-            </div>
-            <i />
-            <div className="registration-step">
-              <span>3</span>
-              <h2>Kontak Orang Tua</h2>
-            </div>
+          <div className="registration-stepper" role="navigation" aria-label="Tahapan formulir pendaftaran">
+            {stepperSteps.map((step, index) => (
+              <React.Fragment key={step.id}>
+                {index > 0 && (
+                  <i className={stepperSteps[index - 1].completed ? "completed" : ""} />
+                )}
+                <button
+                  type="button"
+                  onClick={() => scrollToStep(step)}
+                  className={`registration-step border-0 bg-transparent p-0 text-left cursor-pointer transition-opacity hover:opacity-85 ${
+                    step.completed
+                      ? "completed"
+                      : activeStep === step.id
+                      ? "active"
+                      : ""
+                  }`}
+                >
+                  <span>{step.completed ? <Check size={14} /> : step.id}</span>
+                  <h2>{step.label}</h2>
+                </button>
+              </React.Fragment>
+            ))}
           </div>
           <div className="registration-layout">
             <form className="registration-form" onSubmit={submit}>
-              <section className="form-card">
+              <AiAutofillCard
+                onApplyParsed={(patch) =>
+                  setForm((current) => ({ ...current, ...patch }))
+                }
+              />
+              <section id="step-data-pendaftaran" className="form-card scroll-mt-24">
                 <div className="form-card-title">
                   <span className="number">01</span>
                   <div>
@@ -260,13 +463,63 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
                       />
                     </Field>
                   )}
-                  <Field label="Foto 3x4 (URL)">
-                    <input
-                      type="url"
-                      value={form.photo_url}
-                      onChange={update("photo_url")}
-                      placeholder="https://..."
-                    />
+                  <Field label="Foto 3x4">
+                    <div className="flex w-full min-w-0 items-center gap-3 overflow-hidden rounded-lg border border-slate-200 bg-white p-2.5">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={handlePhotoChange}
+                        style={{ display: "none" }}
+                      />
+                      <div className="h-14 w-11 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400">
+                        {photoPreview || form.photo_url ? (
+                          <img
+                            src={photoPreview || form.photo_url}
+                            alt="Preview foto siswa"
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <ImagePlus size={18} />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-semibold text-slate-700">
+                          {photoFile ? photoFile.name : "Belum ada foto dipilih"}
+                        </p>
+                        <p className="text-[11px] text-slate-400">
+                          JPG, PNG, atau WEBP (maks. 2 MB)
+                        </p>
+                        {photoError && (
+                          <p className="mt-1 text-[11px] font-semibold text-red-600" role="alert">
+                            {photoError}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="h-8 rounded-lg border-slate-200 px-3 text-xs font-semibold text-[#524480] hover:bg-[#F3EEFA]"
+                        >
+                          {photoFile ? "Ganti" : "Pilih Foto"}
+                        </Button>
+                        {photoFile && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleRemovePhoto}
+                            className="h-8 w-8 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
+                            aria-label="Hapus foto"
+                          >
+                            <X size={14} />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </Field>
                   <Field label="Tinggal bersama">
                     <div className="select-wrap">
@@ -333,7 +586,7 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
                     </Field>
                   )}
                 </div>
-                <div className="form-section-divider">
+                <div id="step-riwayat-kesehatan" className="form-section-divider scroll-mt-24">
                   <span>02 / Riwayat Kesehatan</span>
                 </div>
                 <div className="form-grid">
@@ -419,9 +672,9 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
                   </Field>
                 </div>
               </section>
-              <section className="form-card">
+              <section id="step-kontak-darurat" className="form-card scroll-mt-24">
                 <div className="form-card-title">
-                  <span className="number">02</span>
+                  <span className="number">03</span>
                   <div>
                     <h2>Kontak darurat</h2>
                     <p>Tambahkan sampai tiga kontak selain orang tua atau wali.</p>
@@ -466,9 +719,9 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
                   </Field>
                 </div>
               </section>
-              <section className="form-card">
+              <section id="step-kebiasaan-kemandirian" className="form-card scroll-mt-24">
                 <div className="form-card-title">
-                  <span className="number">03</span>
+                  <span className="number">04</span>
                   <div>
                     <h2>Kebiasaan dan kemandirian</h2>
                     <p>Informasi perilaku anak untuk menentukan pendampingan yang tepat.</p>
@@ -612,6 +865,6 @@ export default function RegistrationPage({ form, setForm, onNavigate }) {
           </div>
         </div>
       </section>
-    </main>
+    </Wrapper>
   );
 }

@@ -3,6 +3,7 @@ import {
   Activity,
   CalendarDays,
   ChevronDown,
+  ClipboardList,
   FileText,
   LogOut,
   Menu,
@@ -238,13 +239,21 @@ export default function Header({ page, user, onNavigate, onLogout }) {
                     <Button
                       variant="ghost"
                       onClick={() => navigate("dashboard")}
-                      className="w-full justify-start gap-2 text-xs font-bold text-[#524480]"
+                      className="w-full justify-start gap-2 text-xs font-bold text-white hover:bg-white/10 hover:text-[#2EC300]"
                     >
                       <Activity size={15} />
                       Dashboard Admin
                     </Button>
                   ) : (
                     <>
+                      <Button
+                        variant="ghost"
+                        onClick={() => navigate("portal")}
+                        className="w-full justify-start gap-2 text-xs font-bold text-[#524480]"
+                      >
+                        <ClipboardList size={15} />
+                        Status &amp; Anak Saya
+                      </Button>
                       <Button
                         variant="ghost"
                         onClick={() => navigate("register")}
@@ -269,7 +278,7 @@ export default function Header({ page, user, onNavigate, onLogout }) {
                       setMenuOpen(false);
                       onLogout();
                     }}
-                    className="w-full justify-start gap-2 text-xs font-bold text-red-600 hover:bg-red-50"
+                    className="w-full justify-start gap-2 text-xs font-bold text-red-600 hover:text-[#2EC300]"
                   >
                     <LogOut size={15} />
                     Keluar Akun
@@ -338,6 +347,14 @@ export default function Header({ page, user, onNavigate, onLogout }) {
                       </Button>
                     ) : (
                       <>
+                        <Button
+                          variant="ghost"
+                          onClick={() => navigate("portal")}
+                          className="w-full flex justify-start items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-[#2A2345] hover:bg-[#F3EEFA] transition-colors h-auto"
+                        >
+                          <ClipboardList size={15} className="text-[#524480]" />
+                          <span>Status &amp; Anak Saya</span>
+                        </Button>
                         <Button
                           variant="ghost"
                           onClick={() => navigate("register")}

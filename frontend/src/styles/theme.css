@@ -187,14 +187,19 @@ footer span {
     color: #FFFFFF;
   }
 
-  .site-header .main-nav > button:hover,
+  .site-header .main-nav button:not(.theme-action):hover,
   .site-header .main-nav > button.active {
     background-color: rgba(255, 255, 255, 0.12);
     color: var(--action-green);
   }
 
   .site-header .main-nav button.text-red-600:not(.theme-action) {
-    color: #FFFFFF;
+    color: #FF4F4F;
+  }
+
+  .site-header .main-nav button.text-red-600:not(.theme-action):hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #FF4F4F;
   }
 
   .site-header .main-nav .theme-action {

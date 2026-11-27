@@ -7,7 +7,7 @@ import studentLearning from "../../../assets/images/student-learning.webp";
 
 export default function HeroSection({ onNavigate }) {
   const handleCtaClick = () => {
-    onNavigate?.("register");
+    onNavigate?.("portal");
   };
 
   return (

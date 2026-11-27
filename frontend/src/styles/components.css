@@ -60,7 +60,7 @@
     @apply text-[14px] font-medium tracking-wider text-[#524480];
   }
   .registration-stepper {
-    @apply my-6 flex items-center gap-3;
+    @apply my-6 flex flex-wrap items-center gap-3;
   }
   .registration-step {
     @apply flex items-center gap-2 text-xs text-slate-400;
@@ -74,8 +74,17 @@
   .registration-step.active h2 {
     @apply text-[#524480] text-[12px] font-bold;
   }
+  .registration-step.completed span {
+    @apply bg-[#22B559] text-white;
+  }
+  .registration-step.completed h2 {
+    @apply text-[#1E974B] text-[12px] font-bold;
+  }
   .registration-stepper i {
-    @apply h-px w-14 bg-slate-200;
+    @apply h-px w-14 bg-slate-200 transition-colors;
+  }
+  .registration-stepper i.completed {
+    @apply bg-[#22B559];
   }
   .registration-layout {
     @apply grid grid-cols-[1fr_280px] items-start gap-5 max-lg:grid-cols-1 text-sm font-light text-slate-600 max-md:gap-3;
@@ -106,7 +115,7 @@
     @apply grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-[15px] font-bold text-brand-500;
   }
   .form-grid {
-    @apply grid grid-cols-2 gap-5 max-md:grid-cols-1 text-slate-600;
+    @apply grid grid-cols-2 items-start gap-5 max-md:grid-cols-1 text-slate-600;
   }
   .form-grid input,
   .form-grid select,
