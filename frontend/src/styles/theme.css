@@ -1,0 +1,214 @@
+:root {
+  --page-bg: #f0E8FF;
+  --page-bg-image-hero: url("../assets/images/bg-naira-hero.webp");
+  --page-bg-image-landing: url("../assets/images/bg-naira-landing.webp");
+  --landing-image-overlay: rgba(240, 232, 255, 0.60);
+  --page-blue: #0077B6;
+  --surface-card: #FFFFFF;
+  --surface-border: #DCE8F5;
+  --action-green: #2EC300;
+  --action-green-hover: #37FA00;
+  --action-yellow: #FFF2BC;
+  --action-yellow-border: #F2E3A9;
+  --action-yellow-text: #6A571B;
+  --action-text: #000000;
+  --action-text-hover: #000000;
+}
+
+header.site-header {
+  background-color: #0077B6;
+  -webkit-backdrop-filter: blur(100px);
+  backdrop-filter: blur(0px);
+  transition: background-color 250ms ease, transform 300ms ease;
+}
+
+header.site-header.is-scrolled {
+  background-color: rgba(0, 119, 182, 0.78);
+}
+
+.site-header .site-brand-name,
+.site-header .main-nav button,
+.site-header .mobile-menu {
+  color: #FFFFFF;
+}
+
+.site-header .reference-header-inner > button:first-child > span > span:last-child {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.site-header .main-nav button:hover,
+.site-header .main-nav button.active {
+  color: var(--action-green);
+}
+
+.sidebar-nav.theme-action {
+  color: var(--action-green);
+}
+
+body,
+.app-shell,
+.ref-landing,
+.admin-dashboard,
+.subpage.registration-page,
+.schedule-page,
+.auth-page {
+  background-color: var(--page-bg);
+}
+
+.ref-landing > section,
+.admin-content,
+.dashboard-content {
+  background-color: var(--page-bg);
+}
+
+.background-image-hero {
+  background-image:
+    linear-gradient(var(--landing-image-overlay), var(--landing-image-overlay)),
+    var(--page-bg-image-hero);
+  background-size: cover;
+  background-position: center;
+}
+
+.background-image-landing {
+  background-image:
+    linear-gradient(var(--landing-image-overlay), var(--landing-image-overlay)),
+    var(--page-bg-image-landing);
+  background-size: cover;
+  background-position: center;
+}
+
+.admin-sidebar,
+.auth-aside,
+.reference-trust,
+.reference-footer,
+footer {
+  background-color:#0077B6;
+}
+
+.dashboard-card,
+.registration-history,
+.form-card,
+.registration-help,
+.availability-card,
+.schedule-filter,
+.booking-summary,
+.child-profile,
+.auth-layout,
+.auth-card,
+.rounded-2xl.border,
+.group,
+.ref-admission .bg-white {
+  background-color: var(--surface-card);
+  border-color: var(--surface-border);
+}
+
+.admin-stat-grid > div {
+  background-color: var(--surface-card);
+  border-color: var(--surface-border);
+}
+
+.theme-action,
+.site-header .theme-action,
+.primary-button,
+.landing-primary,
+.landing-cta,
+.reference-button,
+.reference-title button {
+  background-color: var(--action-green);
+  border-color: transparent;
+  color: var(--action-text);
+}
+
+.theme-action:hover,
+.site-header .theme-action:hover,
+.primary-button:hover,
+.landing-primary:hover,
+.landing-cta:hover,
+.reference-button:hover,
+.reference-title button:hover {
+  background-color: var(--action-green-hover);
+  color: var(--action-text-hover);
+}
+
+.theme-action-secondary,
+.landing-secondary,
+.admin-status.unscheduled {
+  background-color: var(--action-yellow);
+  border-color: var(--action-yellow-border);
+  color: var(--action-yellow-text);
+}
+
+.sidebar-nav button.active {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+
+.auth-aside h1,
+.auth-aside p,
+.auth-aside .auth-overline,
+.auth-aside .auth-benefit,
+.reference-trust,
+.reference-trust span,
+.reference-footer span,
+footer span {
+  color: #FFFFFF;
+}
+
+.reference-kicker,
+.dashboard-overline,
+.form-headline,
+.schedule-breadcrumb,
+.summary-overline,
+.modal-overline,
+.text-link,
+.auth-footer button,
+.service-link {
+  color: var(--page-blue);
+}
+
+.calendar-grid span.has-session,
+.slot.selected,
+.history-footer .current {
+  background-color: var(--action-green);
+  color: var(--action-text);
+}
+
+.theme-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-border);
+}
+
+@media (max-width: 1023px) {
+  .site-header .main-nav {
+    background-color: #0077B6;
+  }
+
+  .site-header .main-nav button:not(.theme-action) {
+    color: #FFFFFF;
+  }
+
+  .site-header .main-nav button:not(.theme-action):hover,
+  .site-header .main-nav > button.active {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--action-green);
+  }
+
+  .site-header .main-nav button.text-red-600:not(.theme-action) {
+    color: #FF4F4F;
+  }
+
+  .site-header .main-nav button.text-red-600:not(.theme-action):hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #FF4F4F;
+  }
+
+  .site-header .main-nav .theme-action {
+    background-color: var(--action-green);
+    color: var(--action-text);
+  }
+
+  .site-header .main-nav .theme-action:hover {
+    background-color: var(--action-green-hover);
+    color: var(--action-text-hover);
+  }
+}
